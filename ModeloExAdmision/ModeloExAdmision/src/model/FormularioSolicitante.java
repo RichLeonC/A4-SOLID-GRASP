@@ -8,6 +8,7 @@ package model;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+
 /**
  *
  * @author ersolano
@@ -80,6 +81,7 @@ public class FormularioSolicitante {
 
     public void setFecha(Calendar fecha) {
         this.fecha = fecha;
+        
     }
 
     public int getIdSolic() {

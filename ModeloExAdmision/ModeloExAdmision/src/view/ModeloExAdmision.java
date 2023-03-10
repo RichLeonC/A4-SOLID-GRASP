@@ -9,8 +9,11 @@ import controller.Controlador;
 import controller.DAO.SingletonDAO;
 import controller.DTOFormulario;
 import controller.IParametros;
+import java.util.ArrayList;
+import java.util.Random;
 import model.Configuracion;
 import model.DireccionPCD;
+import model.FormularioSolicitante;
 
 /**
  *
@@ -92,17 +95,70 @@ public class ModeloExAdmision {
         System.out.println("Guardando Configuración...");
         elCtrl.guardarConfiguracion();
        Configuracion.getInstance().guardarProperties();
+  
+    }
+    
+    //Crea formularios con idSolicitante diferente
+    public static FormularioSolicitante demoFormularios2(int idSolicitante){
+        Random rand = new Random();
+        String nombreSolic ="Solicitante "+idSolicitante;
+        String correoSolic ="correo1000@gmail.com";
+        String celularSolic ="8123-4567";
+        String colegioSolic ="Colegio del Solicitante "+idSolicitante;
+        DireccionPCD dirSolic = SingletonDAO.getInstance().getPCD(4); 
+        String detalleDir = "Cerquita del Morazán";
+        String carreraSolic = "IC";
+        if(rand.nextInt(2) == 1){
+            carreraSolic = "PI";
+        }
+        
+        String sedeSolic = "CA";
+
+        DTOFormulario elDTO = new  DTOFormulario(idSolicitante, nombreSolic, 
+                                    correoSolic, celularSolic, colegioSolic, 
+                                    dirSolic, detalleDir, carreraSolic, sedeSolic);
+        
+        elCtrl.registrarFormulario(elDTO);
+        return elCtrl.getFormulario(idSolicitante);
+    }
+    
+    public static void gestionExAdmision(){
+        ArrayList<FormularioSolicitante> forms = new ArrayList();
+        for(int i = 50;i<=100;i++){
+            FormularioSolicitante form = demoFormularios2(i);
+            elCtrl.simulacionAplicacionExamen(form.getIdSolic());
+            //System.out.println("P obt: "+form.getDetalleExamen().getPuntajeObtenido());
+            forms.add(form);
+           
+            
+        }
+        
+        mostrarResulPorCarrera("PI", forms);
+    }
+    
+    public static void mostrarResulPorCarrera(String carrera, ArrayList<FormularioSolicitante> forms){
+        ArrayList<FormularioSolicitante> resultados = elCtrl.getFormsPorCarrera_Solicitante(carrera,forms);
+        System.out.println("Size: "+resultados.size());
+        for (int i = 0; i < resultados.size(); i++) {
+            System.out.println("Carrera: "+resultados.get(i).getCarreraSolic().getNombre() + 
+                    "\n Solicitante: "+resultados.get(i).getIdSolic() + "---- Puntaje obtenido: "+resultados.get(i).getDetalleExamen().getPuntajeObtenido());
+        }
+
     }
     
     public static void main(String[] args) {
         System.out.println("En demoConfiguracion");
-        demoConfiguracion();
+        //demoConfiguracion();
+        System.out.println(elCtrl.getFormulario(1000));
     
         System.out.println("En demoCarreras");
         demoCarreras();
         
         System.out.println("En demoFormulario");
-        demoFormulario();
+       // demoFormulario();
+       
+        System.out.println("Gestion Examen Admision");
+       gestionExAdmision();
        
      }
     

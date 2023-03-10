@@ -6,7 +6,12 @@
 package controller;
 
 import controller.DAO.SingletonDAO;
+import java.util.ArrayList;
 import model.FormularioSolicitante;
+import java.util.Calendar;
+import java.util.Random;
+import model.Carrera;
+import model.Configuracion;
 
 /**
  *
@@ -41,6 +46,28 @@ public class AdmFormularios {
     
     public FormularioSolicitante consultarFormulario (int idSolic){
         return SingletonDAO.getInstance().consultarFormulario(idSolic);
+   }
+    
+    public void simulacionAplicacionExamen(int idSolic, Calendar citaExamen){
+        FormularioSolicitante form = consultarFormulario(idSolic);
+        Random rand = new Random();
+       // if(form.getDetalleExamen().getCitaExamen().equals(citaExamen)){
+            int puntaje = rand.nextInt(901);
+          //  System.out.println("P obtenido random: "+puntaje);
+            form.getDetalleExamen().setPuntajeObtenido(puntaje);
+      //  }
+        
     }
     
+    public ArrayList<FormularioSolicitante> getDesgloseCandidatosPorSolicitante(String codigoCarrera, ArrayList<FormularioSolicitante>forms){
+        ArrayList<FormularioSolicitante> filtrado = new ArrayList();
+        for(int i = 0; i<forms.size();i++){
+          //  System.out.println(forms.get(i).getCarreraSolic(). + " == "+codigoCarrera );
+            if(forms.get(i).getCarreraSolic().getCodigo().equals(codigoCarrera)){
+                filtrado.add(forms.get(i));
+            }
+        }
+        
+       return filtrado;
+    }
 }
