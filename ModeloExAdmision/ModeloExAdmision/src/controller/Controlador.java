@@ -10,6 +10,8 @@ import java.util.List;
 import model.Carrera;
 import model.Configuracion;
 import model.FormularioSolicitante;
+import controller.GeneradorCitas;
+import java.util.Calendar;
 
 /**
  *
@@ -20,6 +22,7 @@ public class Controlador {
     private AdmConfiguracion admConfig = new AdmConfiguracion();
     private AdmCarreras admCarreras = new AdmCarreras();
     private AdmFormularios admFormularios = new AdmFormularios();
+    private GeneradorCitas generador = new GeneradorCitas();
     
     public Controlador() {
     }
@@ -84,6 +87,15 @@ public class Controlador {
     }
     public ArrayList<FormularioSolicitante> getFormsPorCarrera_Solicitante(String codigoCarrera, ArrayList<FormularioSolicitante> forms){
         return admFormularios.getDesgloseCandidatosPorSolicitante(codigoCarrera, forms);
+    }
+    
+    public boolean generarCitas(){
+        generador.manejoCitas();
+        return true;
+    }
+    
+    public void notificarCita(FormularioSolicitante solicitante){
+        generador.notificar(solicitante);
     }
     
     

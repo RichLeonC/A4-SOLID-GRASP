@@ -6,6 +6,7 @@
 package model;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  *
@@ -17,6 +18,12 @@ public class DatosExamen {
     private int puntajeObtenido;
 
     public DatosExamen() {
+        this.citaExamen = Calendar.getInstance();
+
+    }
+    
+    public boolean registrarCitaExamen(int numero, Date fechaExamen, Sede lugar){
+        return true;
     }
 
     public Calendar getCitaExamen() {

@@ -12,6 +12,9 @@ import java.util.Calendar;
 import java.util.Random;
 import model.Carrera;
 import model.Configuracion;
+import controller.GeneradorCitas;
+import java.util.List;
+import model.DatosExamen;
 
 /**
  *
@@ -37,12 +40,14 @@ public class AdmFormularios {
             elForm.setDirSolicPCD(elDTO.getDirSolic());
             elForm.setDetalleDirSolic(elDTO.getDetalleDireccion());
             elForm.setCarreraSolic(elDTO.getCarreraSolic());
+            elForm.setDetalleExamen(new DatosExamen());
             
             boolean res= SingletonDAO.getInstance().agregarFormulario(elForm);
             return res;
         }
         return false;
     }
+    
     
     public FormularioSolicitante consultarFormulario (int idSolic){
         return SingletonDAO.getInstance().consultarFormulario(idSolic);

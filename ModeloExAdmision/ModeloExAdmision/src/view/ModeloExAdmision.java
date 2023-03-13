@@ -98,6 +98,14 @@ public class ModeloExAdmision {
   
     }
     
+    public static void generarCitasExamen(){
+        elCtrl.generarCitas();
+    }
+    
+    public static void notificarCita(FormularioSolicitante solicitante){
+        elCtrl.notificarCita(solicitante);
+    }
+    
     //Crea formularios con idSolicitante diferente
     public static FormularioSolicitante demoFormularios2(int idSolicitante){
         Random rand = new Random();
@@ -143,10 +151,19 @@ public class ModeloExAdmision {
             System.out.println("Carrera: "+resultados.get(i).getCarreraSolic().getNombre() + 
                     "\n Solicitante: "+resultados.get(i).getIdSolic() + "---- Puntaje obtenido: "+resultados.get(i).getDetalleExamen().getPuntajeObtenido());
         }
+        
 
     }
     
+
     public static void main(String[] args) {
+        
+        System.out.println("Generar citas de admision:");
+        generarCitasExamen();
+        notificarCita(elCtrl.getFormulario(1000));
+        
+        
+        
         System.out.println("En demoConfiguracion");
         //demoConfiguracion();
         System.out.println(elCtrl.getFormulario(1000));
