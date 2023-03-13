@@ -82,8 +82,8 @@ public class Controlador {
         admFormularios.simulacionAplicacionExamen(idSolic, null);
     }
 
-    public ArrayList<FormularioSolicitante> darEstadosFormulariosCarrera(String nombreCarrera){
-        return admFormularios.darEstadosFormulariosCarrera(nombreCarrera);
+    public ArrayList<FormularioSolicitante> darEstadosFormulariosCarrera(ArrayList<FormularioSolicitante> formularios){
+        return admFormularios.darEstadosFormulariosCarrera(formularios);
     }
     public ArrayList<FormularioSolicitante> getFormsPorCarrera_Solicitante(String codigoCarrera, ArrayList<FormularioSolicitante> forms){
         return admFormularios.getDesgloseCandidatosPorSolicitante(codigoCarrera, forms);

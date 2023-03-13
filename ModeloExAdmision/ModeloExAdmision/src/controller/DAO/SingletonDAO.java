@@ -129,55 +129,44 @@ public class SingletonDAO {
 
     /*
      * @author Andres
-     * @dev Este metodo ordena todos los formularios de tablaFormularios mayor a menor por nota
+     * @param ArrayList<FormularioSolicitante> formularios. Lista de formularios a ordenar
+     * @ret void. No retorna nada porque pasa por referencia
+     * @dev Este metodo ordena todos los formularios de la lista que recibe de mayor a menor por nota
      * */
-    public void ordenarTablaFormularios(){
-        Collections.sort(tablaFormularios);  // Ordena los formularios de mayor a menor por nota
+    public void ordenarFormularios(ArrayList<FormularioSolicitante> formularios){
+        Collections.sort(formularios);  // Ordena los formularios de mayor a menor por nota
     }
 
     /*
     * @author Andres
-    * @param Carrera carrera: La carrera a la que se le desean buscar los formularios
+     * @param ArrayList<FormularioSolicitante> formularios. Por el metodo que lo llama, todos los formularios que recibe son de la misma carrera
     * @ret Un arraylist de enteros con los indices de todos los formularios asociados a la carrera
     * @dev Este metodo busca en la tabla de formularios todos los asociados a una carrera y les pone estado segun el corte y campos
     * */
-    public ArrayList<FormularioSolicitante> darEstadosFormulariosCarrera(String nombreCarrera){
-        // Nos dan el nombre de la carrera pero ocupamos es el objeto carrera
-        Carrera carrera = null;
-        for (Carrera c : tablaCarreras) {
-            if (c.getNombre().equals(nombreCarrera)) {
-                carrera = c;
-                break;
-            }
-        }
-
+    public ArrayList<FormularioSolicitante> darEstadosFormulariosCarrera(ArrayList<FormularioSolicitante> formularios){
         // Se debe ordenar primero para asegurar que primero se consideren las mejores notas
-        ordenarTablaFormularios();
+        ordenarFormularios(formularios);
 
-        // Lista de formularios de la carrera
-        ArrayList<FormularioSolicitante> posiciones = new ArrayList();
-
+        Carrera carrera = formularios.get(0).getCarreraSolic(); // Ocupamos la carrera de cualquier formulario para saber el cupo y la nota minima
         int aceptados = 0;  // Para saber cuando se supera el cupo
         int length = tablaFormularios.size();  // Para evitar calcularlo una y otra vez cada vez que se evalua la conidcion del for
         for (int i = 0; i < length; i++) { // Recorre la tabla de formularios
-            if (tablaFormularios.get(i).getCarreraSolic().equals(carrera)) {// Revisa si el formulario es de la carrera
-                posiciones.add(tablaFormularios.get(i)); // Agrega ese formulario a la lista que se va a retornar
 
-                // Revisa que condicion le puede asignar
-                if (tablaFormularios.get(i).getDetalleExamen().getPuntajeObtenido() < carrera.getPuntajeMinimo()) {
-                    tablaFormularios.get(i).setEstado(TEstadoSolicitante.RECHAZADO);  // No le dio la nota minima, queda fuera
-                } else {
-                    // Obtuvo la nota minima
-                    if(aceptados < carrera.getMaxAdmision()){ // se revisan los campos para ver si esta admitido o en espera
-                        tablaFormularios.get(i).setEstado(TEstadoSolicitante.ADMITIDO);  // como viene ordenado, primero se revisan los que tienen mejor nota
-                        aceptados++;
-                    } else
-                        tablaFormularios.get(i).setEstado(TEstadoSolicitante.CANDIDATO);
-                }
+            // Revisa que condicion le puede asignar
+            if (tablaFormularios.get(i).getDetalleExamen().getPuntajeObtenido() < carrera.getPuntajeMinimo()) {
+                tablaFormularios.get(i).setEstado(TEstadoSolicitante.RECHAZADO);  // No le dio la nota minima, queda fuera
+            } else {
+                // Obtuvo la nota minima
+                if(aceptados < carrera.getMaxAdmision()){ // se revisan los campos para ver si esta admitido o en espera
+                    tablaFormularios.get(i).setEstado(TEstadoSolicitante.ADMITIDO);  // como viene ordenado, primero se revisan los que tienen mejor nota
+                    aceptados++;
+                } else
+                    tablaFormularios.get(i).setEstado(TEstadoSolicitante.CANDIDATO);
             }
+
         }
 
-        return posiciones; // Retornamos la lista de formularios de la carrera
+        return formularios; // Retornamos la lista ordenada por notas y con estados
     }
 
 
