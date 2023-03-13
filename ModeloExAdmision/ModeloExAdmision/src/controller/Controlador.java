@@ -89,13 +89,14 @@ public class Controlador {
         return admFormularios.getDesgloseCandidatosPorSolicitante(codigoCarrera, forms);
     }
     
-    public boolean generarCitas(){
-        generador.manejoCitas();
-        return true;
+    public void generarCitas(ArrayList<FormularioSolicitante>  forms){
+        generador.GenerarCitas(forms);
+        generador.asignarCitasASolicitantes(forms);
+        
     }
     
-    public void notificarCita(FormularioSolicitante solicitante){
-        generador.notificar(solicitante);
+    public void notificarCita(ArrayList<FormularioSolicitante> forms ){
+        generador.notificar(forms);
     }
     
     

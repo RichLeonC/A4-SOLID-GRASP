@@ -26,7 +26,16 @@ public class ModeloExAdmision {
      */
     
     public static Controlador elCtrl = new Controlador();
+    public static ArrayList<FormularioSolicitante> forms = new ArrayList(); //para manejar los mismos formularios
     
+    public static void generarFormularios(){
+            for(int i = 50;i<=100;i++){
+            FormularioSolicitante form = demoFormularios2(i);
+            forms.add(form);
+            
+        }
+    }
+
     
     public static void demoFormulario(){
     int idSolic = 1000;
@@ -98,12 +107,12 @@ public class ModeloExAdmision {
   
     }
     
-    public static void generarCitasExamen(){
-        elCtrl.generarCitas();
+    public static void generarCitasExamen(ArrayList<FormularioSolicitante> forms){
+        elCtrl.generarCitas(forms);
     }
     
-    public static void notificarCita(FormularioSolicitante solicitante){
-        elCtrl.notificarCita(solicitante);
+    public static void notificarCita( ArrayList<FormularioSolicitante> solicitantes){
+        elCtrl.notificarCita(forms);
     }
     
     //Crea formularios con idSolicitante diferente
@@ -131,20 +140,19 @@ public class ModeloExAdmision {
     }
     
     public static void gestionExAdmision(){
-        ArrayList<FormularioSolicitante> forms = new ArrayList();
         for(int i = 50;i<=100;i++){
-            FormularioSolicitante form = demoFormularios2(i);
+            FormularioSolicitante form = elCtrl.getFormulario(i);
             elCtrl.simulacionAplicacionExamen(form.getIdSolic());
             //System.out.println("P obt: "+form.getDetalleExamen().getPuntajeObtenido());
-            forms.add(form);
+
            
             
         }
         
-        mostrarResulPorCarrera("PI", forms);
+        mostrarResulPorCarrera("PI");
     }
     
-    public static void mostrarResulPorCarrera(String carrera, ArrayList<FormularioSolicitante> forms){
+    public static void mostrarResulPorCarrera(String carrera){
         ArrayList<FormularioSolicitante> resultados = elCtrl.getFormsPorCarrera_Solicitante(carrera,forms);
         System.out.println("Size: "+resultados.size());
         for (int i = 0; i < resultados.size(); i++) {
@@ -154,7 +162,7 @@ public class ModeloExAdmision {
         
 
     }
-<<<<<<< HEAD
+
 
     /*
     * @author Andres
@@ -172,17 +180,13 @@ public class ModeloExAdmision {
             System.out.println("Cupo: "+f.getCarreraSolic().getMaxAdmision());
         }
     }
-=======
-    
->>>>>>> main
 
     public static void main(String[] args) {
         
+        generarFormularios();
         System.out.println("Generar citas de admision:");
-        generarCitasExamen();
-        notificarCita(elCtrl.getFormulario(1000));
-        
-        
+        generarCitasExamen(forms);
+        notificarCita(forms);        
         
         System.out.println("En demoConfiguracion");
         //demoConfiguracion();

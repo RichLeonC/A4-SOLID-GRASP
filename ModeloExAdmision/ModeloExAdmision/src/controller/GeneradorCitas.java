@@ -14,6 +14,9 @@ import model.CentroAplicacion;
 import model.DatosExamen;
 import model.FormularioSolicitante;
 import controller.Comunicacion;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.GregorianCalendar;
 /**
  *
  * @author globv
@@ -21,21 +24,21 @@ import controller.Comunicacion;
 public class GeneradorCitas {
     //clase creada para responder al ejercicio 8 de la tarea 4
     
-    private List<Calendar> citasExistentes;
+    private ArrayList<Calendar> citasExistentes = new ArrayList<Calendar>();
     public int cantidadSolicitantesPosCita = 20;
-    private List<FormularioSolicitante> solicitantes = SingletonDAO.getInstance().obtenerFormulariosSolicitantes();
     private Comunicacion notificador = new Comunicacion();
-    private Calendar fechaInicio = Calendar.getInstance();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd");	
+    private Calendar fechaInicio = new GregorianCalendar(2020,10,28,9,0,0);
 
     
     
     
     public GeneradorCitas() {
-        this.fechaInicio.set(2020, 9, 1, 9, 0); // la primera fecha es el 15 de octubre a las 8 am y entre cita y citahay  4 horas
+        
     }
 
     
-    void GenerarCitas(){
+    void GenerarCitas(ArrayList<FormularioSolicitante> solicitantes){
         Calendar cita = fechaInicio;
         
         for( int i = 0; i < solicitantes.size(); i++){
@@ -53,7 +56,7 @@ public class GeneradorCitas {
         }
     }
     
-    void asignarCitasASolicitantes(){
+    void asignarCitasASolicitantes(ArrayList<FormularioSolicitante> solicitantes){
         int i = 0;
         for(FormularioSolicitante solicitante : solicitantes){
             DatosExamen datosCita = solicitante.getDetalleExamen();
@@ -62,15 +65,15 @@ public class GeneradorCitas {
         }
     }
     
-    public void notificar(FormularioSolicitante solicitante){
-        DatosExamen exam = solicitante.getDetalleExamen();
-        notificador.enviarCorreo(solicitante.getCorreoSolic());
-        System.out.println(solicitante.getNombreSolic()+ ", su cita es" + exam.getCitaExamen());
+    public void notificar(ArrayList<FormularioSolicitante> solicitantes){
+        
+        for(FormularioSolicitante solicitante : solicitantes){
+            DatosExamen exam = solicitante.getDetalleExamen();
+            notificador.enviarCorreo(solicitante.getCorreoSolic());
+            System.out.println(solicitante.getNombreSolic()+ ", su cita es" + exam.getCitaExamen().getTime());
+        
+        }
         
     }
-    
-    public void manejoCitas(){
-        GenerarCitas();
-        asignarCitasASolicitantes();
-    }
+
 }
