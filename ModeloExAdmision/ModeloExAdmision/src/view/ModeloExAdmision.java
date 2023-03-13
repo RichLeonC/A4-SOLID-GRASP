@@ -180,6 +180,18 @@ public class ModeloExAdmision {
             System.out.println("Cupo: "+f.getCarreraSolic().getMaxAdmision());
         }
     }
+    
+    
+    public static void mostrarEstadoSolicitanteCarrera(int idSolicitante){
+        FormularioSolicitante solicitante = elCtrl.getFormulario(idSolicitante);
+        if (solicitante.getDetalleExamen().getPuntajeObtenido() != 0){
+            System.out.println("Solicitante: " + solicitante.getNombreSolic());
+            System.out.println("Carrera Solicitada : " + solicitante.getCarreraSolic().toString());
+            System.out.println("Resultado de prueba: " + solicitante.getDetalleExamen().getPuntajeObtenido());
+            System.out.println("Estado: " + solicitante.getEstado());
+        }
+        System.out.println("Aun no esta disponible");
+    }
 
     public static void main(String[] args) {
         
@@ -198,9 +210,16 @@ public class ModeloExAdmision {
         System.out.println("En demoFormulario");
        // demoFormulario();
        
+        System.out.println("\nEstado final solicitante en carrera pre-examen");
+        mostrarEstadoSolicitanteCarrera(50);
+        
         System.out.println("Gestion Examen Admision");
-       gestionExAdmision();
+        gestionExAdmision();
+        
+        System.out.println("\nEstado final solicitante en carrera");
+        mostrarEstadoSolicitanteCarrera(50);
        
+        
      }
     
 }

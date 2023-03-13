@@ -48,6 +48,7 @@ public class GeneradorCitas {
               for(int k = 0; k < cantidadSolicitantesPosCita; k++){
                   //mientras no todas las tandas de citas del dia esten cubiertas
                   this.citasExistentes.add(cita);
+                  
                 }
               cita.add(HOUR_OF_DAY, 4); //se le suman 4 horas
             }
