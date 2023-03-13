@@ -67,12 +67,18 @@ public class SingletonDAO {
     
     public List<Carrera> getCarreras(){
         // pendiente: conectar a la persistencia y recuperar las carreras
+  
         return tablaCarreras;
     }
     
     public List<Sede> getSedes(){
         // pendiente: conectar a la persistencia y recuperar las sedes
-        return tablaSedes;
+        List<Sede> sedes =new ArrayList();
+        for (Iterator<Sede> it = tablaSedes.iterator(); it.hasNext();) {
+            Sede sede = it.next();
+            sedes.add(sede);
+        }
+        return sedes;
     }
     
     public List<Carrera> consultarCarrerasdeUnaSede (String unaSede){
@@ -175,6 +181,15 @@ public class SingletonDAO {
     }
 
 
+    
+       public List obtenerFormulariosSolicitantes(){
+        List<FormularioSolicitante> formularios = new ArrayList<FormularioSolicitante>();
+        for (FormularioSolicitante form : tablaFormularios) {
+            formularios.add(form);
+        }
+        return formularios;
+    }
+    
     public boolean agregarFormulario(FormularioSolicitante unFormulario){
         for (FormularioSolicitante form : tablaFormularios) {
             if (form.getNumero()== unFormulario.getNumero())
