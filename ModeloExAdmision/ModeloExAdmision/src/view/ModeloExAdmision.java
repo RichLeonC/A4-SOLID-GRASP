@@ -145,7 +145,24 @@ public class ModeloExAdmision {
         }
 
     }
-    
+
+    /*
+    * @author Andres
+    * @param nombreCarrera string del nombre de la carrera que se desea ver los estados de los formularios
+    * @dev Este metodo se encarga de mostrar los estados de los formularios de una carrera en especifico, ordenados por puntaje, primero salen los admitidos, despues los en espera y por ultimo los rechazados
+    * */
+    public static void verEstadosFormulariosCarrera(String nombreCarrera){
+        ArrayList<FormularioSolicitante> formulariosCarrera = elCtrl.darEstadosFormulariosCarrera(nombreCarrera);
+        for(FormularioSolicitante f : formulariosCarrera){
+            System.out.println("Formulario: "+f.getIdSolic());
+            System.out.println("Estado: "+f.getEstado());
+            System.out.println("Puntaje: "+f.getDetalleExamen().getPuntajeObtenido());
+            System.out.println("Carrera: "+f.getCarreraSolic().getNombre());
+            System.out.println("Puntaje Minimo: "+f.getCarreraSolic().getPuntajeMinimo());
+            System.out.println("Cupo: "+f.getCarreraSolic().getMaxAdmision());
+        }
+    }
+
     public static void main(String[] args) {
         System.out.println("En demoConfiguracion");
         //demoConfiguracion();

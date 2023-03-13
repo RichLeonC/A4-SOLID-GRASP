@@ -120,41 +120,58 @@ public class SingletonDAO {
         return null;
     }
 
+
+    /*
+     * @author Andres
+     * @dev Este metodo ordena todos los formularios de tablaFormularios mayor a menor por nota
+     * */
+    public void ordenarTablaFormularios(){
+        Collections.sort(tablaFormularios);  // Ordena los formularios de mayor a menor por nota
+    }
+
     /*
     * @author Andres
     * @param Carrera carrera: La carrera a la que se le desean buscar los formularios
+    * @ret Un arraylist de enteros con los indices de todos los formularios asociados a la carrera
     * @dev Este metodo busca en la tabla de formularios todos los asociados a una carrera y les pone estado segun el corte y campos
     * */
-    public void darEstadosFormulariosCarrera(Carrera carrera){
-        // Sacar los formularios de la carrera
-        ArrayList<FormularioSolicitante> formularios = new ArrayList(); // Lista de formularios de la carrera
-        ArrayList<Integer> posiciones = new ArrayList(); // Lista de posiciones de los formularios en la tabla de formularios, util para despues acceder a la tablaFormularios a partir de formularios
-
-        for (FormularioSolicitante form : tablaFormularios) { // Recorre la tabla de formularios
-            if (form.getCarreraSolic().equals(carrera)) // Revisa si el formulario es de la carrera
-                formularios.add(form); // Agrega el formulario a la lista de formularios de la carrera
-                posiciones.add(tablaFormularios.indexOf(form)); // Agrega la posicion del formulario en la tablaFormularios
-        }
-
-        // Ordena los formularios para saber quienes son las mejores notas
-        Collections.sort(formularios);  // Ordena los formularios de mayor a menor por nota
-
-        // Revisa los formularios y les pone estado
-        int i = 0;  // Para saber que posicion se asocia a que formulario
-        int aceptados = 0;  // Para saber quienes quedan como admitidos y quienes como candidatos
-        for (FormularioSolicitante form : formularios) {  // Recorre la lista de formularios de la carrera
-            if (form.getDetalleExamen().getPuntajeObtenido() < carrera.getPuntajeMinimo()) {
-                tablaFormularios.get(posiciones.get(i)).setEstado(TEstadoSolicitante.RECHAZADO);  // No le dio la nota minima, queda fuera
-            } else {
-                // Obtuvo la nota minima
-                if(aceptados < carrera.getMaxAdmision()){ // se revisan los campos
-                    tablaFormularios.get(posiciones.get(i)).setEstado(TEstadoSolicitante.ADMITIDO);  // como viene ordenado, primero se revisan los que tienen mejor nota
-                    aceptados++;
-                } else
-                    tablaFormularios.get(posiciones.get(i)).setEstado(TEstadoSolicitante.CANDIDATO);
+    public ArrayList<FormularioSolicitante> darEstadosFormulariosCarrera(String nombreCarrera){
+        // Nos dan el nombre de la carrera pero ocupamos es el objeto carrera
+        Carrera carrera = null;
+        for (Carrera c : tablaCarreras) {
+            if (c.getNombre().equals(nombreCarrera)) {
+                carrera = c;
+                break;
             }
-            i++;  // Se pasa a la siguiente posicion de forms
         }
+
+        // Se debe ordenar primero para asegurar que primero se consideren las mejores notas
+        ordenarTablaFormularios();
+
+        // Lista de formularios de la carrera
+        ArrayList<FormularioSolicitante> posiciones = new ArrayList();
+
+        int aceptados = 0;  // Para saber cuando se supera el cupo
+        int length = tablaFormularios.size();  // Para evitar calcularlo una y otra vez cada vez que se evalua la conidcion del for
+        for (int i = 0; i < length; i++) { // Recorre la tabla de formularios
+            if (tablaFormularios.get(i).getCarreraSolic().equals(carrera)) {// Revisa si el formulario es de la carrera
+                posiciones.add(tablaFormularios.get(i)); // Agrega ese formulario a la lista que se va a retornar
+
+                // Revisa que condicion le puede asignar
+                if (tablaFormularios.get(i).getDetalleExamen().getPuntajeObtenido() < carrera.getPuntajeMinimo()) {
+                    tablaFormularios.get(i).setEstado(TEstadoSolicitante.RECHAZADO);  // No le dio la nota minima, queda fuera
+                } else {
+                    // Obtuvo la nota minima
+                    if(aceptados < carrera.getMaxAdmision()){ // se revisan los campos para ver si esta admitido o en espera
+                        tablaFormularios.get(i).setEstado(TEstadoSolicitante.ADMITIDO);  // como viene ordenado, primero se revisan los que tienen mejor nota
+                        aceptados++;
+                    } else
+                        tablaFormularios.get(i).setEstado(TEstadoSolicitante.CANDIDATO);
+                }
+            }
+        }
+
+        return posiciones; // Retornamos la lista de formularios de la carrera
     }
 
 
