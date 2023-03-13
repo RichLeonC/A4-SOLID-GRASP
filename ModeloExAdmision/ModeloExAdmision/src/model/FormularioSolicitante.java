@@ -7,13 +7,14 @@ package model;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.lang.Comparable;  // Necesario para ordenar los formularios por nota, auxiliar para metodos externos, la interfaz exigia que se haga aqui
 
 
 /**
  *
  * @author ersolano
  */
-public class FormularioSolicitante {
+public class FormularioSolicitante implements Comparable<FormularioSolicitante> {
     private static int proxFormulario = 
             (int) (Configuracion.getInstance().getParam("CONSECUTIVO_FORM", Integer.class));
      
@@ -31,13 +32,14 @@ public class FormularioSolicitante {
     private TEstadoSolicitante estado;
     private DatosExamen detalleExamen;
 
-    public FormularioSolicitante() {
+    public FormularioSolicitante(){
         this.numero = getProximo();
         this.fecha = Calendar.getInstance();
         //aquí se crean los espacios que deberían llenarse por aparte
         this.estado = TEstadoSolicitante.SOLICITANTE;
         this.detalleExamen = new DatosExamen();    
     }
+
 
     public FormularioSolicitante(int idSolic, String nombreSolic, 
                                  String celSolic, String correoSolic, 
@@ -188,8 +190,16 @@ public class FormularioSolicitante {
                 "estado=" + estado +  "\n" +
                 "detalleExamen=" + detalleExamen + '\n';
     }
-    
-    
-    
-    
+
+    /**
+     * @author: Andres
+     * @dev: permite comparar dos formularios por nota para ordenar. Auxiliar para metodos externos, la interfaz exigia que se haga aqui
+     * @param f
+     * @return diferencia entre las notas
+     */
+    @Override
+    public int compareTo(FormularioSolicitante f) {
+            int notaComaparacion = f.getDetalleExamen().getPuntajeObtenido();
+            return notaComaparacion - this.getDetalleExamen().getPuntajeObtenido();
+    }
 }

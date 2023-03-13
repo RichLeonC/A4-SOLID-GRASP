@@ -78,7 +78,10 @@ public class Controlador {
     public void simulacionAplicacionExamen(int idSolic){
         admFormularios.simulacionAplicacionExamen(idSolic, null);
     }
-    
+
+    public void darEstadosFormulariosCarrera(Carrera carrera){
+        admFormularios.darEstadosFormulariosCarrera(carrera);
+    }
     public ArrayList<FormularioSolicitante> getFormsPorCarrera_Solicitante(String codigoCarrera, ArrayList<FormularioSolicitante> forms){
         return admFormularios.getDesgloseCandidatosPorSolicitante(codigoCarrera, forms);
     }

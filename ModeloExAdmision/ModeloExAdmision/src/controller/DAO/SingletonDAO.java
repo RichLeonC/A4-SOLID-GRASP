@@ -5,15 +5,9 @@
  */
 package controller.DAO;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import model.Carrera;
-import model.CentroAplicacion;
-import model.DireccionPCD;
-import model.FormularioSolicitante;
-import model.Sede;
-import model.TGrado;
+import java.util.*;
+
+import model.*;
 
 /**
  *
@@ -22,7 +16,9 @@ import model.TGrado;
 public class SingletonDAO {
     private static SingletonDAO instance;
 
-    private  ArrayList<Carrera> tablaCarreras = new ArrayList(); 
+
+
+    private  ArrayList<Carrera> tablaCarreras = new ArrayList();
     private  ArrayList<Sede> tablaSedes = new ArrayList(); 
     private  ArrayList<CentroAplicacion> tablaCentros = new ArrayList(); 
     private  ArrayList<DireccionPCD> tablaPCD = new ArrayList(); 
@@ -123,7 +119,45 @@ public class SingletonDAO {
         }
         return null;
     }
-    
+
+    /*
+    * @author Andres
+    * @param Carrera carrera: La carrera a la que se le desean buscar los formularios
+    * @dev Este metodo busca en la tabla de formularios todos los asociados a una carrera y les pone estado segun el corte y campos
+    * */
+    public void darEstadosFormulariosCarrera(Carrera carrera){
+        // Sacar los formularios de la carrera
+        ArrayList<FormularioSolicitante> formularios = new ArrayList(); // Lista de formularios de la carrera
+        ArrayList<Integer> posiciones = new ArrayList(); // Lista de posiciones de los formularios en la tabla de formularios, util para despues acceder a la tablaFormularios a partir de formularios
+
+        for (FormularioSolicitante form : tablaFormularios) { // Recorre la tabla de formularios
+            if (form.getCarreraSolic().equals(carrera)) // Revisa si el formulario es de la carrera
+                formularios.add(form); // Agrega el formulario a la lista de formularios de la carrera
+                posiciones.add(tablaFormularios.indexOf(form)); // Agrega la posicion del formulario en la tablaFormularios
+        }
+
+        // Ordena los formularios para saber quienes son las mejores notas
+        Collections.sort(formularios);  // Ordena los formularios de mayor a menor por nota
+
+        // Revisa los formularios y les pone estado
+        int i = 0;  // Para saber que posicion se asocia a que formulario
+        int aceptados = 0;  // Para saber quienes quedan como admitidos y quienes como candidatos
+        for (FormularioSolicitante form : formularios) {  // Recorre la lista de formularios de la carrera
+            if (form.getDetalleExamen().getPuntajeObtenido() < carrera.getPuntajeMinimo()) {
+                tablaFormularios.get(posiciones.get(i)).setEstado(TEstadoSolicitante.RECHAZADO);  // No le dio la nota minima, queda fuera
+            } else {
+                // Obtuvo la nota minima
+                if(aceptados < carrera.getMaxAdmision()){ // se revisan los campos
+                    tablaFormularios.get(posiciones.get(i)).setEstado(TEstadoSolicitante.ADMITIDO);  // como viene ordenado, primero se revisan los que tienen mejor nota
+                    aceptados++;
+                } else
+                    tablaFormularios.get(posiciones.get(i)).setEstado(TEstadoSolicitante.CANDIDATO);
+            }
+            i++;  // Se pasa a la siguiente posicion de forms
+        }
+    }
+
+
     public boolean agregarFormulario(FormularioSolicitante unFormulario){
         for (FormularioSolicitante form : tablaFormularios) {
             if (form.getNumero()== unFormulario.getNumero())

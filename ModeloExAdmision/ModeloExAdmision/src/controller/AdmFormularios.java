@@ -47,6 +47,10 @@ public class AdmFormularios {
     public FormularioSolicitante consultarFormulario (int idSolic){
         return SingletonDAO.getInstance().consultarFormulario(idSolic);
    }
+
+    public void darEstadosFormulariosCarrera(Carrera carrera){
+        SingletonDAO.getInstance().darEstadosFormulariosCarrera(carrera);
+    }
     
     public void simulacionAplicacionExamen(int idSolic, Calendar citaExamen){
         FormularioSolicitante form = consultarFormulario(idSolic);
